@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css?family=Knewave');
+@import url('https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz');
+
+
+#headerNavbar {
+    background-color: #333;
+    margin-bottom: -30px;
+    text-align: center;
+    background-color: #5AACAF;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    overflow: hidden;
+}
+
+#fullsizePhoto {
+    width: 1300px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.splashpagePhoto {
+    width: 400px; 
+}
+
+h1 {
+    font-family: 'Knewave', cursive;
+    font-size: 50px;
+}
+
+#topHeader {
+    color: #B8B12C;
+    margin-bottom: -45px;
+    margin-right:50px;
+    margin-left:50px;   
+}
+
+#middleHeader {
+    color: #F38700;
+    margin-bottom: -50px;
+    margin-left:120px;   
+}
+
+#bottomHeader {
+    color: #18AEE3;
+    margin-bottom: -60px;
+    margin-right:50px;
+    margin-left:50px; 
+}
+
+#splashpage {
+    text-align: center;
+}
+
+#splashpageText {
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    color: #F58600;
+    font-size: 30px;
+    margin-top: -15px;
+    text-align: center;
+}
+
+.locationContainer{
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    font-size: 20px;
+    color: #E86025;
+    width: 100px;
+    height: 100px;
+    margin-left: 100px;
+    margin-right: 100px;
+    display: inline-block;   
+}
+
+#splashpage img {
+    width: 60px;
+    height: 50px;
+    border-radius: 50%;
+    margin-top: -15px;
+}
