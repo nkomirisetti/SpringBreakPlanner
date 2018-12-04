@@ -6,6 +6,24 @@ $(document).ready(function() {
         buildSearchInterface();
     });
 
+    $('.pageContainer').on("keyup", "#search-bar", function() {
+        let searchText = $(this).val().toLowerCase();
+        let searchDropdown = $('#search-type-selector');
+        let searchType = searchDropdown.val();
+        if(searchType == "city") {
+            $('.pageContainer .city-name').filter(function() {
+                $(this).parent().toggle($(this).text().toLowerCase().indexOf(searchText) > -1)
+             });
+        }
+        if(searchType == "warmer") {
+            //toggle cities who have temperature lower than the searched temperature
+        }
+        if(searchType == "colder") {
+            //toggle cities who have temperature higher than the searched temperature
+        }
+
+    });
+
 
     function buildSearchInterface() {
         let pageContainer = $('.pageContainer');
@@ -48,4 +66,6 @@ $(document).ready(function() {
         entry.attr("city", cityName);
         return entry;
     }
+
+
 });
