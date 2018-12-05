@@ -102,8 +102,15 @@ $(document).ready(() => {
         var pageContainer = $('#pageContainer');
         pageContainer.empty();
 
+
         var cityName = city + ", " + state;
         pageContainer.append('<h2>' + cityName + '</h2>');
+
+        var returnButton = $('<button class="return">Return</button>');
+        pageContainer.on("click", ".return", function (event) {
+            buildSearchInterface();
+        });
+        pageContainer.append(returnButton);
 
         var sampleItenDiv = $('<div class="sampleDay" id="sampleDay"></div>');
 
@@ -154,7 +161,7 @@ $(document).ready(() => {
         });
     }
 
-    $('.pageContainer').on("click", ".list-entry", function() {
+    $('.pageContainer').on("click", ".list-entry", function () {
         let city = $(this).attr("city");
         let state = $(this).attr("state");
         DetailsPage(city, state);
