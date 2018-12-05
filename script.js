@@ -32,12 +32,14 @@ $(document).ready(() => {
         buildSearchInterface();
     });
 
-    $('.pageContainer').on("keyup", "#search-bar", function () {
+    $('#pageContainer').on("keyup", "#search-bar", function () {
         let searchText = $(this).val().toLowerCase();
+        console.log(searchText);
         let searchDropdown = $('#search-type-selector');
         let searchType = searchDropdown.val();
+        console.log(searchType);
         if (searchType == "city") {
-            $('.pageContainer .city-name').filter(function () {
+            $('#pageContainer .city-name').filter(function () {
                 $(this).parent().toggle($(this).text().toLowerCase().indexOf(searchText) > -1)
             });
         }
@@ -52,7 +54,7 @@ $(document).ready(() => {
 
 
     function buildSearchInterface() {
-        let pageContainer = $('.pageContainer');
+        let pageContainer = $('#pageContainer');
         pageContainer.empty();
         pageContainer.append("<select id='search-type-selector' name='searchChoice'><option value='city'>By City</option><option value='warmer'>Warmer Than</option><option value='colder'>Colder Than</option></select>")
         pageContainer.append("<input id='search-bar' type='text' placeholder='Search...'>");
@@ -65,12 +67,12 @@ $(document).ready(() => {
             xhrFields: { withCredentials: true },
             dataType: 'json',
             success: function (response) {
-                let airportArray = response.data;
-                for (let i = 0; i < airportArray.length; i++) {
+                let airportArray = response;
+                for (let i = 0; i < 20; i++) {
                     let city = airportArray[i].city;
-                    let state = airportArray[i].state;
-                    let newEntry = buildEntry(city, state);
-                    pageContainer.append(newEntry);
+                    console.log(city);
+                    let newEntry = buildEntry(city);
+                    $("#pageContainer").append(newEntry);
                 }
             },
             error: function () {
@@ -79,18 +81,15 @@ $(document).ready(() => {
         });
     }
 
-    function buildEntry(city, state) {
+    function buildEntry(city) {
         let cityName = city;
-        let stateName = state;
 
         let entry = $('<div class="list-entry"></div>');
         //append city image to div
         entry.append('<p class="city-name">' + cityName + '</p>');
-        entry.append('<p class="state-name">' + stateName + '</p>');
         //append weather data here (user openweathermap API)
 
         entry.attr("city", cityName);
-        entry.attr("state", stateName);
         return entry;
     }
 
