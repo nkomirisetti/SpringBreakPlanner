@@ -90,6 +90,7 @@ $(document).ready(() => {
         //append weather data here (user openweathermap API)
 
         entry.attr("city", cityName);
+        entry.attr("state", stateName);
         return entry;
     }
 
@@ -152,6 +153,12 @@ $(document).ready(() => {
             });
         });
     }
+
+    $('.pageContainer').on("click", ".list-entry", function() {
+        let city = $(this).attr("city");
+        let state = $(this).attr("state");
+        DetailsPage(city, state);
+    });
 });
 
 
