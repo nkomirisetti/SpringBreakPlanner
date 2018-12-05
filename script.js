@@ -160,7 +160,7 @@ $(document).ready(() => {
         });
     }
 
-    $('.pageContainer').on("click", ".list-entry", function () {
+    $('#pageContainer').on("click", ".list-entry", function () {
         let city = $(this).attr("city");
         let state = $(this).attr("state");
         DetailsPage(city, state);
