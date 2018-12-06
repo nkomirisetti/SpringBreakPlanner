@@ -39,10 +39,8 @@ $(document).ready(() => {
 
     $('#pageContainer').on("keyup", "#search-bar", function () {
         let searchText = $(this).val().toLowerCase();
-        console.log(searchText);
         let searchDropdown = $('#search-type-selector');
         let searchType = searchDropdown.val();
-        console.log(searchType);
         if (searchType == "city") {
             $('#pageContainer .city-name').filter(function () {
                 $(this).parent().toggle($(this).text().toLowerCase().indexOf(searchText) > -1)
@@ -76,7 +74,6 @@ $(document).ready(() => {
                 let airportArray = response;
                 for (let i = 0; i < 30; i++) {
                     let city = airportArray[i].city;
-                    console.log(city);
                     let newEntry = buildEntry(city);
                     $("#pageContainer").append(newEntry);
                 }
@@ -100,7 +97,9 @@ $(document).ready(() => {
     }
 
     var venues_url = "https://api.foursquare.com/v2/venues/explore?client_id=1OLLF5IIHTFP0LPT54GNMU1BQHHGONNAZFVDVVFHSB1NPA5G&client_secret=GGIW2UECPUAP23WFAA5LRU2H3I5ZDUY4NJHYDHOVMQUVTHEQ&near="
-
+    var places_url1 = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?key=AIzaSyCeA-FfGGy8YeLB04QLxrt_XgFiC0lbyuo&input="; // add text query
+    var places_url2 = "&inputtype=textquery&fields=photos";
+    var images_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photoreference="; // add photo refrence ID
     var DetailsPage = function (city) {
         var pageContainer = $('#pageContainer');
         pageContainer.empty();
@@ -115,15 +114,58 @@ $(document).ready(() => {
         });
         pageContainer.append(returnButton);
 
+        // slideShowCode
+        pageContainer.append('<div class="places-slideshow"></div>');
+
+        var addToSlideShow = function (textQuery) {
+            pageContainer.append('<div class="map" id="map"></div>');
+            var map = new google.maps.Map(document.getElementById('map'),{
+                zoom:200
+            });
+            var initialRequest = {
+                query: textQuery,
+                fields: ['photos']
+            };
+            var service = new google.maps.places.PlacesService(map);
+            service.findPlaceFromQuery(initialRequest, function (results, status) {
+                console.log(results[0].photos[0].getUrl());
+            });
+            // get place (need author name)
+            // get image
+            // add to page container
+        }
+        // endSlideShowCode
+
         var sampleItenDiv = $('<div class="sampleDay" id="sampleDay"></div>');
+
+        // $.ajax(venues_url + city + "&query=breakfast&v=20181202&limit=3&radius=30000", {
+        //     type: 'GET',
+        //     dataType: 'json',
+        //     success: (response) => {
+        //        $.ajax(places_url1 + response.response.groups[0].items[0].venue.name + places_url2, {
+        //             type: 'GET',
+        //             dataType: 'json',
+        //             success: (response) => {
+        //                 $.ajax(images_url + response.candidates[0].photos[0].photo_reference, {
+        //                     type: 'GET',
+        //                     dataType: 'json',
+        //                     success: (response)=>{
+        //                         console.log(response);
+        //                     }
+        //                 })
+        //             }
+        //        });
+        //     }
+        // })
+
 
         sampleItenDiv.append('<h3>Lets look at what a day in ' + city + ' could look like: </h3>');
         $.ajax(venues_url + city + "&query=breakfast&v=20181202&limit=3&radius=30000", {
             type: 'GET',
             dataType: 'json',
             success: (response) => {
+                addToSlideShow(response.response.groups[0].items[0].venue.name);
                 sampleItenDiv.append('<h4>First, breakfast at ' + response.response.groups[0].items[0].venue.name + '</h4>');
-                console.log(response.response.groups[0].items[0].venue.categories[0].name)
                 sampleItenDiv.append('<label>' + response.response.groups[0].items[0].venue.name +
                     ' is a ' + response.response.groups[0].items[0].venue.categories[0].name +
                     ' located at ' + response.response.groups[0].items[0].venue.location.formattedAddress[0] + " " +
@@ -138,7 +180,6 @@ $(document).ready(() => {
                 dataType: 'json',
                 success: (response) => {
                     sampleItenDiv.append('<h4>After breakfast, we think you will like an art activity at ' + response.response.groups[0].items[0].venue.name + '</h4>');
-                    console.log(response.response.groups[0].items[0].venue.categories[0].name)
                     sampleItenDiv.append('<label>' + response.response.groups[0].items[0].venue.name +
                         ' is a ' + response.response.groups[0].items[0].venue.categories[0].name +
                         ' located at ' + response.response.groups[0].items[0].venue.location.formattedAddress[0] + " " +
@@ -152,7 +193,6 @@ $(document).ready(() => {
                     dataType: 'json',
                     success: (response) => {
                         sampleItenDiv.append('<h4>After that, lunch at ' + response.response.groups[0].items[1].venue.name + '</h4>');
-                        console.log(response.response.groups[0].items[1].venue.categories[0].name)
                         sampleItenDiv.append('<label>' + response.response.groups[0].items[1].venue.name +
                             ' is a ' + response.response.groups[0].items[1].venue.categories[0].name +
                             ' located at ' + response.response.groups[0].items[1].venue.location.formattedAddress[0] + " " +
@@ -166,7 +206,6 @@ $(document).ready(() => {
                         dataType: 'json',
                         success: (response) => {
                             sampleItenDiv.append('<h4>After lunch, a very popular local site to shop at is ' + response.response.groups[0].items[1].venue.name + '</h4>');
-                            console.log(response.response.groups[0].items[1].venue.categories[0].name)
                             sampleItenDiv.append('<label>' + response.response.groups[0].items[1].venue.name +
                                 ' is a ' + response.response.groups[0].items[1].venue.categories[0].name +
                                 ' located at ' + response.response.groups[0].items[1].venue.location.formattedAddress[0] + " " +
@@ -180,7 +219,6 @@ $(document).ready(() => {
                             dataType: 'json',
                             success: (response) => {
                                 sampleItenDiv.append('<h4>Then, dinner at ' + response.response.groups[0].items[2].venue.name + '</h4>');
-                                console.log(response.response.groups[0].items[2].venue.categories[0].name)
                                 sampleItenDiv.append('<label>' + response.response.groups[0].items[2].venue.name +
                                     ' is a ' + response.response.groups[0].items[2].venue.categories[0].name +
                                     ' located at ' + response.response.groups[0].items[2].venue.location.formattedAddress[0] + " " +
