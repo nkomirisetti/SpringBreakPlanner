@@ -29,7 +29,6 @@ $(document).ready(() => {
     // when home is clicked, append everything to page container
     $("#homeButton").click(function () {
         buildHomePage();
-
     });
 
     let rootURL = "http://comp426.cs.unc.edu:3001/";
@@ -55,7 +54,6 @@ $(document).ready(() => {
         if (searchType == "colder") {
             //toggle cities who have temperature higher than the searched temperature
         }
-
     });
 
 
@@ -70,11 +68,13 @@ $(document).ready(() => {
     function loadEntries() {
         $.ajax(rootURL + "/airports", {
             type: 'GET',
-            xhrFields: { withCredentials: true },
+            xhrFields: {
+                withCredentials: true
+            },
             dataType: 'json',
             success: function (response) {
                 let airportArray = response;
-                for (let i = 0; i < 20; i++) {
+                for (let i = 0; i < 30; i++) {
                     let city = airportArray[i].city;
                     console.log(city);
                     let newEntry = buildEntry(city);
@@ -124,41 +124,72 @@ $(document).ready(() => {
             success: (response) => {
                 sampleItenDiv.append('<h4>First, breakfast at ' + response.response.groups[0].items[0].venue.name + '</h4>');
                 console.log(response.response.groups[0].items[0].venue.categories[0].name)
-                sampleItenDiv.append('<label>' + response.response.groups[0].items[0].venue.name
-                    + ' is a ' + response.response.groups[0].items[0].venue.categories[0].name
-                    + ' located at ' + response.response.groups[0].items[0].venue.location.formattedAddress[0] + " "
-                    + response.response.groups[0].items[0].venue.location.formattedAddress[1] + " "
-                    + response.response.groups[0].items[0].venue.location.formattedAddress[2] + '</label>');
+                sampleItenDiv.append('<label>' + response.response.groups[0].items[0].venue.name +
+                    ' is a ' + response.response.groups[0].items[0].venue.categories[0].name +
+                    ' located at ' + response.response.groups[0].items[0].venue.location.formattedAddress[0] + " " +
+                    response.response.groups[0].items[0].venue.location.formattedAddress[1] + " " +
+                    response.response.groups[0].items[0].venue.location.formattedAddress[2] + '</label>');
                 pageContainer.append(sampleItenDiv);
             }
         }).done(function () {
-            $.ajax(venues_url + city + "&query=lunch&v=20181202&limit=3&radius=30000", {
+
+            $.ajax(venues_url + city + "&section=arts&v=20181202&limit=1&radius=30000", {
                 type: 'GET',
                 dataType: 'json',
                 success: (response) => {
-                    sampleItenDiv.append('<h4>After that, lunch at ' + response.response.groups[0].items[1].venue.name + '</h4>');
-                    console.log(response.response.groups[0].items[1].venue.categories[0].name)
-                    sampleItenDiv.append('<label>' + response.response.groups[0].items[1].venue.name
-                        + ' is a ' + response.response.groups[0].items[1].venue.categories[0].name
-                        + ' located at ' + response.response.groups[0].items[1].venue.location.formattedAddress[0] + " "
-                        + response.response.groups[0].items[1].venue.location.formattedAddress[1] + " "
-                        + response.response.groups[0].items[1].venue.location.formattedAddress[2] + '</label>');
+                    sampleItenDiv.append('<h4>After breakfast, we think you will like an art activity at ' + response.response.groups[0].items[0].venue.name + '</h4>');
+                    console.log(response.response.groups[0].items[0].venue.categories[0].name)
+                    sampleItenDiv.append('<label>' + response.response.groups[0].items[0].venue.name +
+                        ' is a ' + response.response.groups[0].items[0].venue.categories[0].name +
+                        ' located at ' + response.response.groups[0].items[0].venue.location.formattedAddress[0] + " " +
+                        response.response.groups[0].items[0].venue.location.formattedAddress[1] + " " +
+                        response.response.groups[0].items[0].venue.location.formattedAddress[2] + '</label>');
                     pageContainer.append(sampleItenDiv);
                 }
             }).done(function () {
-                $.ajax(venues_url + city + "&query=dinner&v=20181202&limit=3&radius=3000", {
+                $.ajax(venues_url + city + "&query=lunch&v=20181202&limit=3&radius=30000", {
                     type: 'GET',
                     dataType: 'json',
                     success: (response) => {
-                        sampleItenDiv.append('<h4>Then, dinner at ' + response.response.groups[0].items[2].venue.name + '</h4>');
-                        console.log(response.response.groups[0].items[2].venue.categories[0].name)
-                        sampleItenDiv.append('<label>' + response.response.groups[0].items[2].venue.name
-                            + ' is a ' + response.response.groups[0].items[2].venue.categories[0].name
-                            + ' located at ' + response.response.groups[0].items[2].venue.location.formattedAddress[0] + " "
-                            + response.response.groups[0].items[2].venue.location.formattedAddress[1] + " "
-                            + response.response.groups[0].items[2].venue.location.formattedAddress[2] + '</label>');
+                        sampleItenDiv.append('<h4>After that, lunch at ' + response.response.groups[0].items[1].venue.name + '</h4>');
+                        console.log(response.response.groups[0].items[1].venue.categories[0].name)
+                        sampleItenDiv.append('<label>' + response.response.groups[0].items[1].venue.name +
+                            ' is a ' + response.response.groups[0].items[1].venue.categories[0].name +
+                            ' located at ' + response.response.groups[0].items[1].venue.location.formattedAddress[0] + " " +
+                            response.response.groups[0].items[1].venue.location.formattedAddress[1] + " " +
+                            response.response.groups[0].items[1].venue.location.formattedAddress[2] + '</label>');
                         pageContainer.append(sampleItenDiv);
                     }
+                }).done(function () {
+                    $.ajax(venues_url + city + "&section=shops&v=20181202&limit=2&radius=3000", {
+                        type: 'GET',
+                        dataType: 'json',
+                        success: (response) => {
+                            sampleItenDiv.append('<h4>After lunch, a very popular local site to shop at is ' + response.response.groups[0].items[1].venue.name + '</h4>');
+                            console.log(response.response.groups[0].items[1].venue.categories[0].name)
+                            sampleItenDiv.append('<label>' + response.response.groups[0].items[1].venue.name +
+                                ' is a ' + response.response.groups[0].items[1].venue.categories[0].name +
+                                ' located at ' + response.response.groups[0].items[1].venue.location.formattedAddress[0] + " " +
+                                response.response.groups[0].items[1].venue.location.formattedAddress[1] + " " +
+                                response.response.groups[0].items[1].venue.location.formattedAddress[2] + '</label>');
+                            pageContainer.append(sampleItenDiv);
+                        }
+                    }).done(function () {
+                        $.ajax(venues_url + city + "&query=dinner&v=20181202&limit=3&radius=3000", {
+                            type: 'GET',
+                            dataType: 'json',
+                            success: (response) => {
+                                sampleItenDiv.append('<h4>Then, dinner at ' + response.response.groups[0].items[2].venue.name + '</h4>');
+                                console.log(response.response.groups[0].items[2].venue.categories[0].name)
+                                sampleItenDiv.append('<label>' + response.response.groups[0].items[2].venue.name +
+                                    ' is a ' + response.response.groups[0].items[2].venue.categories[0].name +
+                                    ' located at ' + response.response.groups[0].items[2].venue.location.formattedAddress[0] + " " +
+                                    response.response.groups[0].items[2].venue.location.formattedAddress[1] + " " +
+                                    response.response.groups[0].items[2].venue.location.formattedAddress[2] + '</label>');
+                                pageContainer.append(sampleItenDiv);
+                            }
+                        });
+                    });
                 });
             });
         });
@@ -170,5 +201,3 @@ $(document).ready(() => {
         DetailsPage(city, state);
     });
 });
-
-
