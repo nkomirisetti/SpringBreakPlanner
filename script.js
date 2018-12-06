@@ -97,14 +97,33 @@ $(document).ready(() => {
     }
 
     var venues_url = "https://api.foursquare.com/v2/venues/explore?client_id=1OLLF5IIHTFP0LPT54GNMU1BQHHGONNAZFVDVVFHSB1NPA5G&client_secret=GGIW2UECPUAP23WFAA5LRU2H3I5ZDUY4NJHYDHOVMQUVTHEQ&near="
-    var places_url1 = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?key=AIzaSyCeA-FfGGy8YeLB04QLxrt_XgFiC0lbyuo&input="; // add text query
-    var places_url2 = "&inputtype=textquery&fields=photos";
-    var images_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photoreference="; // add photo refrence ID
     var DetailsPage = function (city) {
         var pageContainer = $('#pageContainer');
         pageContainer.empty();
 
-
+        var showSlides = function (n) {
+            var i;
+            var slides = document.getElementsByClassName("slide");
+            var dots = document.getElementsByClassName("dot");
+            if (slides.length === 0) {
+                return;
+            }
+            if (n > slides.length) {
+                currentPicture = 1
+            }
+            if (n < 1) {
+                currentPicture = slides.length
+            }
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            slides[currentPicture - 1].style.display = "block";
+            console.log(dots);
+            //dots[currentPicture - 1].className += " active";
+        }
         var cityName = city;
         pageContainer.append('<h2>' + cityName + '</h2>');
 
@@ -115,12 +134,33 @@ $(document).ready(() => {
         pageContainer.append(returnButton);
 
         // slideShowCode
-        pageContainer.append('<div class="places-slideshow"></div>');
+        var currentPicture = 1;
+        var numOfPictures = 1;
+
+
+
+        var slideShowContainer = $('<div class="places-slideshow"></div>');
+        var slideShowNavBar = $('<div class="places-slideshow-navBar"></div>');
+
+
+        // next and back buttons
+        var prevButton = $('<a class="prev">&#10094;</a>');
+        prevButton.click(showSlides(currentPicture -= 1));
+
+        var nextButton = $('<a class="next">&#10095;</a>');
+        nextButton.click(showSlides(currentPicture += 1));
+
+        slideShowContainer.append(prevButton);
+        slideShowContainer.append(nextButton);
+
+
+        pageContainer.append(slideShowContainer);
+        pageContainer.append(slideShowNavBar);
 
         var addToSlideShow = function (textQuery) {
             pageContainer.append('<div class="map" id="map"></div>');
-            var map = new google.maps.Map(document.getElementById('map'),{
-                zoom:200
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 200
             });
             var initialRequest = {
                 query: textQuery,
@@ -128,36 +168,31 @@ $(document).ready(() => {
             };
             var service = new google.maps.places.PlacesService(map);
             service.findPlaceFromQuery(initialRequest, function (results, status) {
-                console.log(results[0].photos[0].getUrl());
+                if (results != null) {
+                    var imageUrl = results[0].photos[0].getUrl();
+                    var imageCaption = $(results[0].photos[0].html_attributions[0]);
+                    imageCaption.addClass("caption");
+
+                    // add to page container
+                    var imageContainer = $('<div class="slide fade"></div>');
+                    imageContainer.append('<img src=' + imageUrl + '>');
+                    imageContainer.append(imageCaption);
+                    console.log("hit");
+                    slideShowContainer.append(imageContainer);
+                    var circleButton = $('<span class="dot"></span>');
+                    circleButton.click(showSlides(numOfPictures));
+                    slideShowNavBar.append(circleButton);
+                    numOfPictures++;
+                }
             });
-            // get place (need author name)
-            // get image
-            // add to page container
         }
+
+
+
         // endSlideShowCode
 
+
         var sampleItenDiv = $('<div class="sampleDay" id="sampleDay"></div>');
-
-        // $.ajax(venues_url + city + "&query=breakfast&v=20181202&limit=3&radius=30000", {
-        //     type: 'GET',
-        //     dataType: 'json',
-        //     success: (response) => {
-        //        $.ajax(places_url1 + response.response.groups[0].items[0].venue.name + places_url2, {
-        //             type: 'GET',
-        //             dataType: 'json',
-        //             success: (response) => {
-        //                 $.ajax(images_url + response.candidates[0].photos[0].photo_reference, {
-        //                     type: 'GET',
-        //                     dataType: 'json',
-        //                     success: (response)=>{
-        //                         console.log(response);
-        //                     }
-        //                 })
-        //             }
-        //        });
-        //     }
-        // })
-
 
         sampleItenDiv.append('<h3>Lets look at what a day in ' + city + ' could look like: </h3>');
         $.ajax(venues_url + city + "&query=breakfast&v=20181202&limit=3&radius=30000", {
@@ -174,11 +209,11 @@ $(document).ready(() => {
                 pageContainer.append(sampleItenDiv);
             }
         }).done(function () {
-
             $.ajax(venues_url + city + "&section=arts&v=20181202&limit=1&radius=30000", {
                 type: 'GET',
                 dataType: 'json',
                 success: (response) => {
+                    addToSlideShow(response.response.groups[0].items[0].venue.name);
                     sampleItenDiv.append('<h4>After breakfast, we think you will like an art activity at ' + response.response.groups[0].items[0].venue.name + '</h4>');
                     sampleItenDiv.append('<label>' + response.response.groups[0].items[0].venue.name +
                         ' is a ' + response.response.groups[0].items[0].venue.categories[0].name +
@@ -192,6 +227,7 @@ $(document).ready(() => {
                     type: 'GET',
                     dataType: 'json',
                     success: (response) => {
+                        addToSlideShow(response.response.groups[0].items[0].venue.name);
                         sampleItenDiv.append('<h4>After that, lunch at ' + response.response.groups[0].items[1].venue.name + '</h4>');
                         sampleItenDiv.append('<label>' + response.response.groups[0].items[1].venue.name +
                             ' is a ' + response.response.groups[0].items[1].venue.categories[0].name +
@@ -205,6 +241,7 @@ $(document).ready(() => {
                         type: 'GET',
                         dataType: 'json',
                         success: (response) => {
+                            addToSlideShow(response.response.groups[0].items[0].venue.name);
                             sampleItenDiv.append('<h4>After lunch, a very popular local site to shop at is ' + response.response.groups[0].items[1].venue.name + '</h4>');
                             sampleItenDiv.append('<label>' + response.response.groups[0].items[1].venue.name +
                                 ' is a ' + response.response.groups[0].items[1].venue.categories[0].name +
@@ -218,6 +255,7 @@ $(document).ready(() => {
                             type: 'GET',
                             dataType: 'json',
                             success: (response) => {
+                                addToSlideShow(response.response.groups[0].items[0].venue.name);
                                 sampleItenDiv.append('<h4>Then, dinner at ' + response.response.groups[0].items[2].venue.name + '</h4>');
                                 sampleItenDiv.append('<label>' + response.response.groups[0].items[2].venue.name +
                                     ' is a ' + response.response.groups[0].items[2].venue.categories[0].name +
@@ -231,11 +269,12 @@ $(document).ready(() => {
                 });
             });
         });
+        showSlides(currentPicture);
+
     }
 
     $('#pageContainer').on("click", ".list-entry", function () {
         let city = $(this).attr("city");
-        let state = $(this).attr("state");
-        DetailsPage(city, state);
+        DetailsPage(city);
     });
 });
