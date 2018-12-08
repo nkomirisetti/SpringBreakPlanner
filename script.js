@@ -64,7 +64,7 @@ $(document).ready(() => {
     }
 
     function loadEntries() {
-        $.ajax(rootURL + "/airports", {
+        $.ajax(rootURL + "airports", {
             type: 'GET',
             xhrFields: {
                 withCredentials: true
@@ -74,7 +74,8 @@ $(document).ready(() => {
                 let airportArray = response;
                 for (let i = 0; i < 30; i++) {
                     let city = airportArray[i].city;
-                    let newEntry = buildEntry(city);
+                    let idNum = airportArray[i].id;
+                    let newEntry = buildEntry(city, idNum);
                     $("#pageContainer").append(newEntry);
                 }
             },
@@ -84,16 +85,42 @@ $(document).ready(() => {
         });
     }
 
-    function buildEntry(city) {
+    function buildEntry(city, idNum) {
         let cityName = city;
 
         let entry = $('<div class="list-entry"></div>');
         //append city image to div
         entry.append('<p class="city-name">' + cityName + '</p>');
         //append weather data here (user openweathermap API)
+        addRaleighFlights(entry);
+
 
         entry.attr("city", cityName);
+        entry.attr("id", idNum);
         return entry;
+    }
+
+    function addRaleighFlights(entry) {
+        $.ajax(rootURL + "flights?filter[departure_id]=144154", {
+            type: 'GET',
+            xhrFields: { withCredentials: true },
+            dataType: 'json',
+            success: function (response) {
+                console.log("request received");
+                let raleighFlights = response;
+                let flightCount = 0;
+                for(let i = 0; i < raleighFlights.length; i++) {
+                    if(raleighFlights[i].arrival_id == entry.attr("id"))
+                        flightCount++;
+
+                }
+                entry.append('<p class="flights">Number of Flights Available: ' + flightCount + '</p>');
+
+            },
+            error: function () {
+                alert("error");
+            }
+        });
     }
 
     var venues_url = "https://api.foursquare.com/v2/venues/explore?client_id=1OLLF5IIHTFP0LPT54GNMU1BQHHGONNAZFVDVVFHSB1NPA5G&client_secret=GGIW2UECPUAP23WFAA5LRU2H3I5ZDUY4NJHYDHOVMQUVTHEQ&near="
