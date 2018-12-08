@@ -77,3 +77,22 @@ h1 {
     border-radius: 50%;
     margin-top: -15px;
 }
+
+/*Search Page Styles*/
+.list-entry {
+    background-color: #cccccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+#search-bar {
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 85%;
+}
+
+#search-type-selector {
+    padding: 10px;
+    margin-bottom: 10px;
+}
