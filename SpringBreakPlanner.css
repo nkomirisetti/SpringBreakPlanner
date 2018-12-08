@@ -84,6 +84,7 @@ h1 {
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
+    display: flex;
 }
 
 #search-bar {
@@ -95,4 +96,14 @@ h1 {
 #search-type-selector {
     padding: 10px;
     margin-bottom: 10px;
+}
+
+.img-box {
+    width: 100px;
+    height: 100px;
+    margin: auto 0;
+}
+
+.content-box {
+    margin-left: 35px;
 }

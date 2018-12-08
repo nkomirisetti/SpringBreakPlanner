@@ -106,19 +106,23 @@ $(document).ready(() => {
 
         let entry = $('<div class="list-entry"></div>');
         //append city image to div
-        entry.append('<p class="city-name">' + cityName + '</p>');
+        let contentDiv = $('<div class="content-box"></div>');
+        let imgDiv = $('<div class="img-box"></div>');
+        entry.append(imgDiv);
+        entry.append(contentDiv);
+        contentDiv.append('<p class="city-name">' + cityName + '</p>');
         //append weather data here (user openweathermap API)
-        addWeatherData(entry, cityName);
+        addWeatherData(entry, cityName, contentDiv);
         
         
         entry.attr("city", cityName);
         entry.attr("id", idNum);
-        addRaleighFlights(entry);
+        addRaleighFlights(entry, contentDiv, imgDiv);
 
         return entry;
     }
 
-    function addRaleighFlights(entry) {
+    function addRaleighFlights(entry, contentDiv, imgDiv) {
         $.ajax(rootURL + "flights?filter[departure_id]=144154", {
             type: 'GET',
             xhrFields: { withCredentials: true },
@@ -132,11 +136,11 @@ $(document).ready(() => {
                         flightCount++;
 
                 }
-                entry.append('<p class="flights">Number of Flights Available: ' + flightCount + '</p>');
+                contentDiv.append('<p class="flights">Number of Flights Available: ' + flightCount + '</p>');
                 if(flightCount == 0) {
-                    entry.append('<img src="red_plane.png" alt="red" height="100" width="100">');
+                    imgDiv.append('<img src="red_plane.png" alt="red" height="100" width="100" class="plane-icon">');
                 } else {
-                    entry.append('<img src="green_plane.png" alt="green" height="100" width="100">');
+                    imgDiv.append('<img src="green_plane.png" alt="green" height="100" width="100" class="plane-icon">');
                 }
 
             },
@@ -146,7 +150,7 @@ $(document).ready(() => {
         });
     }
 
-    function addWeatherData(entry, city) {
+    function addWeatherData(entry, city, contentDiv) {
         let encodedCity = encodeURIComponent(city);
         $.ajax("http://api.openweathermap.org/data/2.5/weather?q=" + encodedCity + "&units=imperial&APPID=ea615f34affc4be5cb4f0be51df01e6a", {
             type: 'GET',
@@ -154,7 +158,7 @@ $(document).ready(() => {
             success: function(response) {
                 let weather = $('<p class="weather">Current Weather: ' + response.main.temp + "&deg; F</p>");
                 entry.attr("weather", response.main.temp);
-                entry.append(weather);
+                contentDiv.append(weather);
             },
             error: function() {
                 alert("error");
