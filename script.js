@@ -47,10 +47,26 @@ $(document).ready(() => {
             });
         }
         if (searchType == "warmer") {
-            //toggle cities who have temperature lower than the searched temperature
+            $('#pageContainer .list-entry').each(function() {
+                let searchTemp = parseInt(searchText);
+                let cityTemp = $(this).attr("weather");
+                if(cityTemp < searchTemp) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+            });
         }
         if (searchType == "colder") {
-            //toggle cities who have temperature higher than the searched temperature
+            $('#pageContainer .list-entry').each(function() {
+                let searchTemp = parseInt(searchText);
+                let cityTemp = $(this).attr("weather");
+                if(cityTemp > searchTemp) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+            });
         }
     });
 
@@ -72,7 +88,7 @@ $(document).ready(() => {
             dataType: 'json',
             success: function (response) {
                 let airportArray = response;
-                for (let i = 0; i < 30; i++) {
+                for (let i = 0; i < 10; i++) {
                     let city = airportArray[i].city;
                     let idNum = airportArray[i].id;
                     let newEntry = buildEntry(city, idNum);
@@ -92,11 +108,13 @@ $(document).ready(() => {
         //append city image to div
         entry.append('<p class="city-name">' + cityName + '</p>');
         //append weather data here (user openweathermap API)
-        addRaleighFlights(entry);
-
-
+        addWeatherData(entry, cityName);
+        
+        
         entry.attr("city", cityName);
         entry.attr("id", idNum);
+        addRaleighFlights(entry);
+
         return entry;
     }
 
@@ -115,9 +133,30 @@ $(document).ready(() => {
 
                 }
                 entry.append('<p class="flights">Number of Flights Available: ' + flightCount + '</p>');
+                if(flightCount == 0) {
+                    entry.append('<img src="red_plane.png" alt="red" height="100" width="100">');
+                } else {
+                    entry.append('<img src="green_plane.png" alt="green" height="100" width="100">');
+                }
 
             },
             error: function () {
+                alert("error");
+            }
+        });
+    }
+
+    function addWeatherData(entry, city) {
+        let encodedCity = encodeURIComponent(city);
+        $.ajax("http://api.openweathermap.org/data/2.5/weather?q=" + encodedCity + "&units=imperial&APPID=ea615f34affc4be5cb4f0be51df01e6a", {
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                let weather = $('<p class="weather">Current Weather: ' + response.main.temp + "&deg; F</p>");
+                entry.attr("weather", response.main.temp);
+                entry.append(weather);
+            },
+            error: function() {
                 alert("error");
             }
         });
