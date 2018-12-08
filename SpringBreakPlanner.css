@@ -87,6 +87,10 @@ h1 {
     display: flex;
 }
 
+.list-entry:hover {
+    background-color: #d6d6d6;
+}
+
 #search-bar {
     padding: 10px;
     margin-bottom: 10px;
