@@ -42,8 +42,13 @@ $(document).ready(() => {
         let searchDropdown = $('#search-type-selector');
         let searchType = searchDropdown.val();
         if (searchType == "city") {
-            $('#pageContainer .city-name').filter(function () {
-                $(this).parent().toggle($(this).text().toLowerCase().indexOf(searchText) > -1)
+            $('#pageContainer .city-name').each(function () {
+                let cityName = $(this).text().toLowerCase();
+                if(cityName.indexOf(searchText) > -1) {
+                    $(this).parent().parent().show();
+                } else {
+                    $(this).parent().parent().hide();
+                }
             });
         }
         if (searchType == "warmer") {
