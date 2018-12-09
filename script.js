@@ -55,10 +55,10 @@ $(document).ready(() => {
             $('#pageContainer .list-entry').each(function () {
                 let searchTemp = parseInt(searchText);
                 let cityTemp = $(this).attr("weather");
-                if (cityTemp < searchTemp) {
-                    $(this).hide();
-                } else {
+                if (cityTemp > searchTemp) {
                     $(this).show();
+                } else {
+                    $(this).hide();
                 }
             });
         }
@@ -66,10 +66,10 @@ $(document).ready(() => {
             $('#pageContainer .list-entry').each(function () {
                 let searchTemp = parseInt(searchText);
                 let cityTemp = $(this).attr("weather");
-                if (cityTemp > searchTemp) {
-                    $(this).hide();
-                } else {
+                if (cityTemp < searchTemp) {
                     $(this).show();
+                } else {
+                    $(this).hide();
                 }
             });
         }
@@ -93,7 +93,7 @@ $(document).ready(() => {
             dataType: 'json',
             success: function (response) {
                 let airportArray = response;
-                for (let i = 0; i < 10; i++) {
+                for (let i = 0; i < 300; i++) {
                     let city = airportArray[i].city;
                     let idNum = airportArray[i].id;
                     let newEntry = buildEntry(city, idNum);
@@ -167,7 +167,8 @@ $(document).ready(() => {
                 contentDiv.append(weather);
             },
             error: function () {
-                alert("error");
+                let weather = $('<p class="weather-not-found">No weather data</p>');
+                contentDiv.append(weather);
             }
         });
     }
