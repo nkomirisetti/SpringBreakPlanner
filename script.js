@@ -44,7 +44,7 @@ $(document).ready(() => {
         if (searchType == "city") {
             $('#pageContainer .city-name').each(function () {
                 let cityName = $(this).text().toLowerCase();
-                if(cityName.indexOf(searchText) > -1) {
+                if (cityName.indexOf(searchText) > -1) {
                     $(this).parent().parent().show();
                 } else {
                     $(this).parent().parent().hide();
@@ -52,10 +52,10 @@ $(document).ready(() => {
             });
         }
         if (searchType == "warmer") {
-            $('#pageContainer .list-entry').each(function() {
+            $('#pageContainer .list-entry').each(function () {
                 let searchTemp = parseInt(searchText);
                 let cityTemp = $(this).attr("weather");
-                if(cityTemp < searchTemp) {
+                if (cityTemp < searchTemp) {
                     $(this).hide();
                 } else {
                     $(this).show();
@@ -63,10 +63,10 @@ $(document).ready(() => {
             });
         }
         if (searchType == "colder") {
-            $('#pageContainer .list-entry').each(function() {
+            $('#pageContainer .list-entry').each(function () {
                 let searchTemp = parseInt(searchText);
                 let cityTemp = $(this).attr("weather");
-                if(cityTemp > searchTemp) {
+                if (cityTemp > searchTemp) {
                     $(this).hide();
                 } else {
                     $(this).show();
@@ -118,8 +118,8 @@ $(document).ready(() => {
         contentDiv.append('<p class="city-name">' + cityName + '</p>');
         //append weather data here (user openweathermap API)
         addWeatherData(entry, cityName, contentDiv);
-        
-        
+
+
         entry.attr("city", cityName);
         entry.attr("id", idNum);
         addRaleighFlights(entry, contentDiv, imgDiv);
@@ -130,19 +130,20 @@ $(document).ready(() => {
     function addRaleighFlights(entry, contentDiv, imgDiv) {
         $.ajax(rootURL + "flights?filter[departure_id]=144154", {
             type: 'GET',
-            xhrFields: { withCredentials: true },
+            xhrFields: {
+                withCredentials: true
+            },
             dataType: 'json',
             success: function (response) {
-                console.log("request received");
                 let raleighFlights = response;
                 let flightCount = 0;
-                for(let i = 0; i < raleighFlights.length; i++) {
-                    if(raleighFlights[i].arrival_id == entry.attr("id"))
+                for (let i = 0; i < raleighFlights.length; i++) {
+                    if (raleighFlights[i].arrival_id == entry.attr("id"))
                         flightCount++;
 
                 }
                 contentDiv.append('<p class="flights">Number of Flights Available: ' + flightCount + '</p>');
-                if(flightCount == 0) {
+                if (flightCount == 0) {
                     imgDiv.append('<img src="red_plane.png" alt="red" height="100" width="100" class="plane-icon">');
                 } else {
                     imgDiv.append('<img src="green_plane.png" alt="green" height="100" width="100" class="plane-icon">');
@@ -160,12 +161,12 @@ $(document).ready(() => {
         $.ajax("http://api.openweathermap.org/data/2.5/weather?q=" + encodedCity + "&units=imperial&APPID=ea615f34affc4be5cb4f0be51df01e6a", {
             type: 'GET',
             dataType: 'json',
-            success: function(response) {
+            success: function (response) {
                 let weather = $('<p class="weather">Current Weather: ' + response.main.temp + "&deg; F</p>");
                 entry.attr("weather", response.main.temp);
                 contentDiv.append(weather);
             },
-            error: function() {
+            error: function () {
                 alert("error");
             }
         });
@@ -179,7 +180,6 @@ $(document).ready(() => {
         var showSlides = function (n) {
             var i;
             var slides = document.getElementsByClassName("slide");
-            var dots = document.getElementsByClassName("dot");
             if (slides.length === 0) {
                 return;
             }
@@ -192,12 +192,7 @@ $(document).ready(() => {
             for (i = 0; i < slides.length; i++) {
                 slides[i].style.display = "none";
             }
-            for (i = 0; i < dots.length; i++) {
-                dots[i].className = dots[i].className.replace(" active", "");
-            }
             slides[currentPicture - 1].style.display = "block";
-            console.log(dots);
-            //dots[currentPicture - 1].className += " active";
         }
         var cityName = city;
         pageContainer.append('<h2>' + cityName + '</h2>');
@@ -210,27 +205,24 @@ $(document).ready(() => {
 
         // slideShowCode
         var currentPicture = 1;
-        var numOfPictures = 1;
-
-
-
-        var slideShowContainer = $('<div class="places-slideshow"></div>');
-        var slideShowNavBar = $('<div class="places-slideshow-navBar"></div>');
-
+        var slideShowContainer = $('<div id="places-slideshow"class="places-slideshow"></div>');
 
         // next and back buttons
         var prevButton = $('<a class="prev">&#10094;</a>');
-        prevButton.click(showSlides(currentPicture -= 1));
+        prevButton.click(function () {
+            console.log();
+            showSlides(currentPicture -= 1)
+        });
 
         var nextButton = $('<a class="next">&#10095;</a>');
-        nextButton.click(showSlides(currentPicture += 1));
+        nextButton.click(function () {
+            showSlides(currentPicture += 1)
+        });
 
         slideShowContainer.append(prevButton);
         slideShowContainer.append(nextButton);
 
-
         pageContainer.append(slideShowContainer);
-        pageContainer.append(slideShowNavBar);
 
         var addToSlideShow = function (textQuery) {
             pageContainer.append('<div class="map" id="map"></div>');
@@ -252,20 +244,12 @@ $(document).ready(() => {
                     var imageContainer = $('<div class="slide fade"></div>');
                     imageContainer.append('<img src=' + imageUrl + '>');
                     imageContainer.append(imageCaption);
-                    console.log("hit");
                     slideShowContainer.append(imageContainer);
-                    var circleButton = $('<span class="dot"></span>');
-                    circleButton.click(showSlides(numOfPictures));
-                    slideShowNavBar.append(circleButton);
-                    numOfPictures++;
+                    showSlides(currentPicture);
                 }
             });
         }
-
-
-
         // endSlideShowCode
-
 
         var sampleItenDiv = $('<div class="sampleDay" id="sampleDay"></div>');
 
@@ -344,8 +328,8 @@ $(document).ready(() => {
                 });
             });
         });
+        console.log(currentPicture);
         showSlides(currentPicture);
-
     }
 
     $('#pageContainer').on("click", ".list-entry", function () {
