@@ -39,6 +39,12 @@ $(document).ready(() => {
 
     $('#pageContainer').on("keyup", "#search-bar", function () {
         let searchText = $(this).val().toLowerCase();
+        if (searchText === ""){
+            $('#pageContainer .city-name').each(function () {
+                $(this).parent().parent().show();
+            });
+            return;
+        }
         let searchDropdown = $('#search-type-selector');
         let searchType = searchDropdown.val();
         if (searchType == "city") {
@@ -211,7 +217,6 @@ $(document).ready(() => {
         // next and back buttons
         var prevButton = $('<a class="prev">&#10094;</a>');
         prevButton.click(function () {
-            console.log();
             showSlides(currentPicture -= 1)
         });
 
@@ -329,7 +334,6 @@ $(document).ready(() => {
                 });
             });
         });
-        console.log(currentPicture);
         showSlides(currentPicture);
     }
 
