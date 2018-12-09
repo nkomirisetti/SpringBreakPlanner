@@ -2,25 +2,38 @@ $(document).ready(() => {
 
     // TO-DO:  Use jQuery tooltip widget to make tooltips look pretty?  
     function buildHomePage() {
+     
         $("#pageContainer").empty();
         $("#pageContainer").append("<div id=\"pictureContainer\"></div>");
         $("#pageContainer").append("<img src=\"https://bento.cdn.pbs.org/hostedbento-prod/filer_public/master%20images/SECE/Travel/travelimagetransparent.png\" alt=\"Stylized drawing of multiple cities\" id=\"fullsizePhoto\">");
         $("#pageContainer").append("<br><br>");
         $("#pageContainer").append("<div id=\"splashpage\"></div>");
         $("#splashpage").append("<div id=\"splashpageText\"> Pick from one of our popular destinations </div>");
+        
         // Raleigh
         $("#splashpage").append("<div id=\"location1Container\" class=\"locationContainer\"></div>");
+        $("#location1Container").on("click", function () {
+            DetailsPage("Raleigh-durham");
+        });
         $("#location1Container").append("<h3 id=\"raleigh\">Raleigh</h3>");
         $("#raleigh").attr("title", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac felis ac nibh placerat dapibus. Nullam lacinia molestie velit, a euismod leo blandit nec. Suspendisse ut placerat augue, et consequat leo. Morbi vestibulum lorem lectus. In tempus diam eu lectus egestas porta. Curabitur viverra est ligula, in fermentum ligula egestas eget. Aenean at nibh id nulla gravida tempor at quis nisi.");
         $("#location1Container").append("<img src=\"http://www.northcarolinatravels.com/raleigh/capital-raleigh.jpg\" alt=\"Historic Raleigh building\" class=\"splashpagePhoto\">");
+        
         // Charleston
         $("#splashpage").append("<div id=\"location2Container\" class=\"locationContainer\"></div>");
+        $("#location2Container").on("click", function () {
+            DetailsPage("Charleston");
+        });
         $("#location2Container").append("<h3 id=\"charleston\">Charleston</h3>");
         $("#charleston").attr("title", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac felis ac nibh placerat dapibus. Nullam lacinia molestie velit, a euismod leo blandit nec. Suspendisse ut placerat augue, et consequat leo. Morbi vestibulum lorem lectus. In tempus diam eu lectus egestas porta. Curabitur viverra est ligula, in fermentum ligula egestas eget. Aenean at nibh id nulla gravida tempor at quis nisi.");
         $("#location2Container").append("<img src=\"https://i0.wp.com/www.charlestoncvb.com/blog/wp-content/uploads/ExploreCharleston_HighBattery_3-2.jpg?resize=1400%2C750&ssl=1\" alt=\"Historic Charleston building\" class=\"splashpagePhoto\">");
+      
         // Asheville
         $("#splashpage").append("<div id=\"location3Container\" class=\"locationContainer\"></div>");
         $("#location3Container").append("<h3 id=\"asheville\">Asheville</h3>");
+        $("#location3Container").on("click", function () {
+            DetailsPage("Asheville");
+        });
         $("#asheville").attr("title", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac felis ac nibh placerat dapibus. Nullam lacinia molestie velit, a euismod leo blandit nec. Suspendisse ut placerat augue, et consequat leo. Morbi vestibulum lorem lectus. In tempus diam eu lectus egestas porta. Curabitur viverra est ligula, in fermentum ligula egestas eget. Aenean at nibh id nulla gravida tempor at quis nisi.");
         $("#location3Container").append("<img src=\"https://www.medprodisposal.com/wp-content/uploads/2016/05/Asheville-NC.jpg\" alt=\"Historic Charleston building\" class=\"splashpagePhoto\">");
     }
@@ -183,6 +196,8 @@ $(document).ready(() => {
     var DetailsPage = function (city) {
         var pageContainer = $('#pageContainer');
         pageContainer.empty();
+        pageContainer.append("<div id=\"cityContainer\"></div>");
+        var cityContainer = $('#cityContainer');
 
         var showSlides = function (n) {
             var i;
@@ -202,36 +217,21 @@ $(document).ready(() => {
             slides[currentPicture - 1].style.display = "block";
         }
         var cityName = city;
-        pageContainer.append('<h2>' + cityName + '</h2>');
-
-        var returnButton = $('<button class="return">Return</button>');
-        pageContainer.on("click", ".return", function (event) {
-            buildSearchInterface();
-        });
-        pageContainer.append(returnButton);
+        cityContainer.append('<h2 id=\"cityName\">' + cityName + '</h2>');
+//        var returnButton = $('<button class="return">Return</button>');
+//        cityContainer.on("click", ".return", function (event) {
+//            buildSearchInterface();
+//        });
+//        cityContainer.append(returnButton);
 
         // slideShowCode
         var currentPicture = 1;
         var slideShowContainer = $('<div id="places-slideshow"class="places-slideshow"></div>');
 
-        // next and back buttons
-        var prevButton = $('<a class="prev">&#10094;</a>');
-        prevButton.click(function () {
-            showSlides(currentPicture -= 1)
-        });
-
-        var nextButton = $('<a class="next">&#10095;</a>');
-        nextButton.click(function () {
-            showSlides(currentPicture += 1)
-        });
-
-        slideShowContainer.append(prevButton);
-        slideShowContainer.append(nextButton);
-
-        pageContainer.append(slideShowContainer);
+        cityContainer.append(slideShowContainer);
 
         var addToSlideShow = function (textQuery) {
-            pageContainer.append('<div class="map" id="map"></div>');
+            cityContainer.append('<div class="map" id="map"></div>');
             var map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 200
             });
@@ -242,14 +242,26 @@ $(document).ready(() => {
             var service = new google.maps.places.PlacesService(map);
             service.findPlaceFromQuery(initialRequest, function (results, status) {
                 if (results != null) {
+                    // next and back buttons
+                    var prevButton = $('<a class="prev">&#10094;</a>');
+                    prevButton.click(function () {
+                        showSlides(currentPicture -= 1)
+                    });
+                    var nextButton = $('<a class="next">&#10095;</a>');
+                    nextButton.click(function () {
+                        showSlides(currentPicture += 1)
+                    });
                     var imageUrl = results[0].photos[0].getUrl();
-                    var imageCaption = $(results[0].photos[0].html_attributions[0]);
-                    imageCaption.addClass("caption");
+                  
+                    // var imageCaption = $(results[0].photos[0].html_attributions[0]);
+                   // imageCaption.addClass("caption");
 
                     // add to page container
                     var imageContainer = $('<div class="slide fade"></div>');
                     imageContainer.append('<img src=' + imageUrl + '>');
-                    imageContainer.append(imageCaption);
+                    //imageContainer.prepend(prevButton);
+                    imageContainer.append(nextButton);
+                   // imageContainer.append(imageCaption);
                     slideShowContainer.append(imageContainer);
                     showSlides(currentPicture);
                 }
@@ -259,7 +271,7 @@ $(document).ready(() => {
 
         var sampleItenDiv = $('<div class="sampleDay" id="sampleDay"></div>');
 
-        sampleItenDiv.append('<h3>Lets look at what a day in ' + city + ' could look like: </h3>');
+        sampleItenDiv.append('<h3>Let\'s look at what a day in ' + city + ' could look like: </h3>');
         $.ajax(venues_url + city + "&query=breakfast&v=20181202&limit=3&radius=30000", {
             type: 'GET',
             dataType: 'json',
@@ -271,7 +283,7 @@ $(document).ready(() => {
                     ' located at ' + response.response.groups[0].items[0].venue.location.formattedAddress[0] + " " +
                     response.response.groups[0].items[0].venue.location.formattedAddress[1] + " " +
                     response.response.groups[0].items[0].venue.location.formattedAddress[2] + '</label>');
-                pageContainer.append(sampleItenDiv);
+                cityContainer.append(sampleItenDiv);
             }
         }).done(function () {
             $.ajax(venues_url + city + "&section=arts&v=20181202&limit=1&radius=30000", {
@@ -285,7 +297,7 @@ $(document).ready(() => {
                         ' located at ' + response.response.groups[0].items[0].venue.location.formattedAddress[0] + " " +
                         response.response.groups[0].items[0].venue.location.formattedAddress[1] + " " +
                         response.response.groups[0].items[0].venue.location.formattedAddress[2] + '</label>');
-                    pageContainer.append(sampleItenDiv);
+                    cityContainer.append(sampleItenDiv);
                 }
             }).done(function () {
                 $.ajax(venues_url + city + "&query=lunch&v=20181202&limit=3&radius=30000", {
@@ -299,7 +311,7 @@ $(document).ready(() => {
                             ' located at ' + response.response.groups[0].items[1].venue.location.formattedAddress[0] + " " +
                             response.response.groups[0].items[1].venue.location.formattedAddress[1] + " " +
                             response.response.groups[0].items[1].venue.location.formattedAddress[2] + '</label>');
-                        pageContainer.append(sampleItenDiv);
+                        cityContainer.append(sampleItenDiv);
                     }
                 }).done(function () {
                     $.ajax(venues_url + city + "&section=shops&v=20181202&limit=2&radius=3000", {
@@ -313,7 +325,7 @@ $(document).ready(() => {
                                 ' located at ' + response.response.groups[0].items[1].venue.location.formattedAddress[0] + " " +
                                 response.response.groups[0].items[1].venue.location.formattedAddress[1] + " " +
                                 response.response.groups[0].items[1].venue.location.formattedAddress[2] + '</label>');
-                            pageContainer.append(sampleItenDiv);
+                            cityContainer.append(sampleItenDiv);
                         }
                     }).done(function () {
                         $.ajax(venues_url + city + "&query=dinner&v=20181202&limit=3&radius=3000", {
@@ -327,7 +339,7 @@ $(document).ready(() => {
                                     ' located at ' + response.response.groups[0].items[2].venue.location.formattedAddress[0] + " " +
                                     response.response.groups[0].items[2].venue.location.formattedAddress[1] + " " +
                                     response.response.groups[0].items[2].venue.location.formattedAddress[2] + '</label>');
-                                pageContainer.append(sampleItenDiv);
+                                cityContainer.append(sampleItenDiv);
                             }
                         });
                     });
