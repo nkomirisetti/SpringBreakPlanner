@@ -20,14 +20,14 @@ $(document).ready(() => {
     login()
     // TO-DO:  Use jQuery tooltip widget to make tooltips look pretty?  
     function buildHomePage() {
-     
+
         $("#pageContainer").empty();
         $("#pageContainer").append("<div id=\"pictureContainer\"></div>");
         $("#pageContainer").append("<img src=\"https://bento.cdn.pbs.org/hostedbento-prod/filer_public/master%20images/SECE/Travel/travelimagetransparent.png\" alt=\"Stylized drawing of multiple cities\" id=\"fullsizePhoto\">");
         $("#pageContainer").append("<br><br>");
         $("#pageContainer").append("<div id=\"splashpage\"></div>");
         $("#splashpage").append("<div id=\"splashpageText\"> Pick from one of our popular destinations </div>");
-        
+
         // Raleigh
         $("#splashpage").append("<div id=\"location1Container\" class=\"locationContainer\"></div>");
         $("#location1Container").on("click", function () {
@@ -36,7 +36,7 @@ $(document).ready(() => {
         $("#location1Container").append("<h3 id=\"raleigh\">Raleigh</h3>");
         $("#raleigh").attr("title", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac felis ac nibh placerat dapibus. Nullam lacinia molestie velit, a euismod leo blandit nec. Suspendisse ut placerat augue, et consequat leo. Morbi vestibulum lorem lectus. In tempus diam eu lectus egestas porta. Curabitur viverra est ligula, in fermentum ligula egestas eget. Aenean at nibh id nulla gravida tempor at quis nisi.");
         $("#location1Container").append("<img src=\"http://www.northcarolinatravels.com/raleigh/capital-raleigh.jpg\" alt=\"Historic Raleigh building\" class=\"splashpagePhoto\">");
-        
+
         // Charleston
         $("#splashpage").append("<div id=\"location2Container\" class=\"locationContainer\"></div>");
         $("#location2Container").on("click", function () {
@@ -45,7 +45,7 @@ $(document).ready(() => {
         $("#location2Container").append("<h3 id=\"charleston\">Charleston</h3>");
         $("#charleston").attr("title", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac felis ac nibh placerat dapibus. Nullam lacinia molestie velit, a euismod leo blandit nec. Suspendisse ut placerat augue, et consequat leo. Morbi vestibulum lorem lectus. In tempus diam eu lectus egestas porta. Curabitur viverra est ligula, in fermentum ligula egestas eget. Aenean at nibh id nulla gravida tempor at quis nisi.");
         $("#location2Container").append("<img src=\"https://i0.wp.com/www.charlestoncvb.com/blog/wp-content/uploads/ExploreCharleston_HighBattery_3-2.jpg?resize=1400%2C750&ssl=1\" alt=\"Historic Charleston building\" class=\"splashpagePhoto\">");
-      
+
         // Asheville
         $("#splashpage").append("<div id=\"location3Container\" class=\"locationContainer\"></div>");
         $("#location3Container").append("<h3 id=\"asheville\">Asheville</h3>");
@@ -237,11 +237,11 @@ $(document).ready(() => {
         }
         var cityName = city;
         cityContainer.append('<h2 id=\"cityName\">' + cityName + '</h2>');
-//        var returnButton = $('<button class="return">Return</button>');
-//        cityContainer.on("click", ".return", function (event) {
-//            buildSearchInterface();
-//        });
-//        cityContainer.append(returnButton);
+        //        var returnButton = $('<button class="return">Return</button>');
+        //        cityContainer.on("click", ".return", function (event) {
+        //            buildSearchInterface();
+        //        });
+        //        cityContainer.append(returnButton);
 
         // slideShowCode
         var currentPicture = 1;
@@ -271,16 +271,16 @@ $(document).ready(() => {
                         showSlides(currentPicture += 1)
                     });
                     var imageUrl = results[0].photos[0].getUrl();
-                  
+
                     // var imageCaption = $(results[0].photos[0].html_attributions[0]);
-                   // imageCaption.addClass("caption");
+                    // imageCaption.addClass("caption");
 
                     // add to page container
                     var imageContainer = $('<div class="slide fade"></div>');
                     imageContainer.append('<img src=' + imageUrl + '>');
                     //imageContainer.prepend(prevButton);
                     imageContainer.append(nextButton);
-                   // imageContainer.append(imageCaption);
+                    // imageContainer.append(imageCaption);
                     slideShowContainer.append(imageContainer);
                     showSlides(currentPicture);
                 }
@@ -367,14 +367,49 @@ $(document).ready(() => {
         });
         showSlides(currentPicture);
         if (areFlightsAvailable === "true") {
-            
-            var bookButton = $('<button>Book the best ticket to this destination</button>');
+            // add code here to append textboxes and input for first name, last name, age, and gender
+            var bookButton = $('<button class="bookButton">Book the best ticket to this destination</button>');
+
+            bookButton.click(function () {
+                var firstname = prompt("Pls enter ur first name"); // these are the textboxes
+                var lastname = prompt("pls enter ur last name");
+                var gender = prompt("whats uir gender");
+                var age = prompt("whats ur age");
+
+                $.ajax({
+                    url: rootURL + 'tickets',
+                    type: 'POST',
+                    data: {
+                        "ticket": {
+                            "first_name": firstname,
+                            "middle_name": "",
+                            "last_name": lastname,
+                            "age": age,
+                            "gender": gender,
+                            "is_purchased": false,
+                            "price_paid": "",
+                            "instance_id": "tentative",
+                            "itinerary_id": "tentative",
+                            "seat_id": "tentative",
+                            "info": '{"isTentative":"yes"}'
+                        }
+                    },
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    success: (response) =>{
+                        alert("we did it?");
+                    }
+                });
+            })
+            pageContainer.append(bookButton);
         }
     }
 
     $('#pageContainer').on("click", ".list-entry", function () {
         let city = $(this).attr("city");
         let isAvail = $(this).attr("isAvail");
+
         DetailsPage(city, isAvail);
     });
 });
