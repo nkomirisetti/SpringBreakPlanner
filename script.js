@@ -81,7 +81,6 @@ $(document).ready(() => {
         }
     });
 
-
     function buildSearchInterface() {
         let pageContainer = $('#pageContainer');
         pageContainer.empty();
@@ -98,6 +97,7 @@ $(document).ready(() => {
             },
             dataType: 'json',
             success: function (response) {
+                console.log(response);
                 let airportArray = response;
                 for (let i = 0; i < 300; i++) {
                     let city = airportArray[i].city;
@@ -227,7 +227,7 @@ $(document).ready(() => {
 
         slideShowContainer.append(prevButton);
         slideShowContainer.append(nextButton);
-
+        
         pageContainer.append(slideShowContainer);
 
         var addToSlideShow = function (textQuery) {
