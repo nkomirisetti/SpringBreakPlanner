@@ -1,5 +1,23 @@
+let rootURL = "http://comp426.cs.unc.edu:3001/";
 $(document).ready(() => {
 
+    function login() {
+        $.ajax({
+            url: rootURL + '/sessions',
+            type: 'POST',
+            data: {
+                "user": {
+                    "username": "nikhilk",
+                    "password": "730097777"
+                }
+            },
+            xhrFields: {
+                withCredentials: true
+            }
+        });
+    }
+
+    login();
     // TO-DO:  Use jQuery tooltip widget to make tooltips look pretty?  
     function buildHomePage() {
         $("#pageContainer").empty();
@@ -31,7 +49,6 @@ $(document).ready(() => {
         buildHomePage();
     });
 
-    let rootURL = "http://comp426.cs.unc.edu:3001/";
 
     $('#searchButton').click(function () {
         buildSearchInterface();
@@ -39,7 +56,7 @@ $(document).ready(() => {
 
     $('#pageContainer').on("keyup", "#search-bar", function () {
         let searchText = $(this).val().toLowerCase();
-        if (searchText === ""){
+        if (searchText === "") {
             $('#pageContainer .city-name').each(function () {
                 $(this).parent().parent().show();
             });
@@ -227,7 +244,7 @@ $(document).ready(() => {
 
         slideShowContainer.append(prevButton);
         slideShowContainer.append(nextButton);
-        
+
         pageContainer.append(slideShowContainer);
 
         var addToSlideShow = function (textQuery) {
