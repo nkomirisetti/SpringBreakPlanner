@@ -17,7 +17,7 @@ $(document).ready(() => {
         });
     }
 
-    login();
+    login()
     // TO-DO:  Use jQuery tooltip widget to make tooltips look pretty?  
     function buildHomePage() {
         $("#pageContainer").empty();
@@ -167,8 +167,10 @@ $(document).ready(() => {
                 }
                 contentDiv.append('<p class="flights">Number of Flights Available: ' + flightCount + '</p>');
                 if (flightCount == 0) {
+                    entry.attr("isAvail", "false");
                     imgDiv.append('<img src="red_plane.png" alt="red" height="100" width="100" class="plane-icon">');
                 } else {
+                    entry.attr("isAvail", "true");
                     imgDiv.append('<img src="green_plane.png" alt="green" height="100" width="100" class="plane-icon">');
                 }
 
@@ -197,7 +199,7 @@ $(document).ready(() => {
     }
 
     var venues_url = "https://api.foursquare.com/v2/venues/explore?client_id=1OLLF5IIHTFP0LPT54GNMU1BQHHGONNAZFVDVVFHSB1NPA5G&client_secret=GGIW2UECPUAP23WFAA5LRU2H3I5ZDUY4NJHYDHOVMQUVTHEQ&near="
-    var DetailsPage = function (city) {
+    var DetailsPage = function (city, areFlightsAvailable) {
         var pageContainer = $('#pageContainer');
         pageContainer.empty();
 
@@ -352,10 +354,15 @@ $(document).ready(() => {
             });
         });
         showSlides(currentPicture);
+        if (areFlightsAvailable === "true") {
+            
+            var bookButton = $('<button>Book the best ticket to this destination</button>');
+        }
     }
 
     $('#pageContainer').on("click", ".list-entry", function () {
         let city = $(this).attr("city");
-        DetailsPage(city);
+        let isAvail = $(this).attr("isAvail");
+        DetailsPage(city, isAvail);
     });
 });
