@@ -236,12 +236,67 @@ $(document).ready(() => {
             slides[currentPicture - 1].style.display = "block";
         }
         var cityName = city;
-        cityContainer.append('<h2 id=\"cityName\">' + cityName + '</h2>');
-        //        var returnButton = $('<button class="return">Return</button>');
-        //        cityContainer.on("click", ".return", function (event) {
-        //            buildSearchInterface();
-        //        });
-        //        cityContainer.append(returnButton);
+        cityContainer.append('<br><div id=\"cityName\">' + cityName + '</div>');
+        
+        if (areFlightsAvailable === "true") {
+            // add code here to append textboxes and input for first name, last name, age, and gender
+            var bookButton = $('<br><div class="bookButton"><button>Book ticket</button></div><br><br>');
+
+            bookButton.click(function () {
+                pageContainer.empty();
+                pageContainer.append("<div id=\"cityContainer\"></div>");
+                var cityContainer = $('#cityContainer');
+                cityContainer.append('<br><div id=\"cityName\">' + cityName + '</div>');
+                cityContainer.append('<h4 id="sampleDaySmallHeader">Enter your first name here </h4>');
+                cityContainer.append("<br><textarea id=\"firstName\"></textarea>");
+                cityContainer.append('<h4 id="sampleDaySmallHeader">Enter your last name here </h4>');
+                cityContainer.append("<br><textarea id=\"lastName\"></textarea>");
+                cityContainer.append('<h4 id="sampleDaySmallHeader">Enter your gender here </h4>');
+                cityContainer.append("<br><textarea id=\"gender\"></textarea>");
+                cityContainer.append('<h4 id="sampleDaySmallHeader">Enter your age here </h4>');
+                cityContainer.append("<br><textarea id=\"age\"></textarea>");
+                var submitButton = $('<br><br><div id="submitButton"><button>Submit</button></div><br><br><br>');
+                cityContainer.append(submitButton);
+                
+                submitButton.click(function () {
+                var firstname = $.trim($("#firstName").val());
+                var lastname = $.trim($("#lastName").val());
+                var gender = $.trim($("#gender").val());
+                var age = $.trim($("#age").val());
+
+                $.ajax({
+                    url: rootURL + 'tickets',
+                    type: 'POST',
+                    data: {
+                        "ticket": {
+                            "first_name": firstname,
+                            "middle_name": "",
+                            "last_name": lastname,
+                            "age": age,
+                            "gender": gender,
+                            "is_purchased": false,
+                            "price_paid": "",
+                            "instance_id": "tentative",
+                            "itinerary_id": "tentative",
+                            "seat_id": "tentative",
+                            "info": '{"isTentative":"yes"}'
+                        }
+                    },
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    success: (response) =>{
+                        alert("we did it?");
+                    }
+                });
+            });
+            });
+            $("#cityContainer").append(bookButton);
+        }
+        
+        if (areFlightsAvailable === "false" || cityName === "Raleigh-durham" || cityName === "Asheville" || cityName === "Charleston"){
+             $("#cityContainer").append("<br><br>");
+        }
 
         // slideShowCode
         var currentPicture = 1;
@@ -290,14 +345,14 @@ $(document).ready(() => {
 
         var sampleItenDiv = $('<div class="sampleDay" id="sampleDay"></div>');
 
-        sampleItenDiv.append('<h3>Let\'s look at what a day in ' + city + ' could look like: </h3>');
+        sampleItenDiv.append('<h3 id="sampleDayLargeHeader">What might a day in ' + city + ' look like? </h3>');
         $.ajax(venues_url + city + "&query=breakfast&v=20181202&limit=3&radius=30000", {
             type: 'GET',
             dataType: 'json',
             success: (response) => {
                 addToSlideShow(response.response.groups[0].items[0].venue.name);
-                sampleItenDiv.append('<h4>First, breakfast at ' + response.response.groups[0].items[0].venue.name + '</h4>');
-                sampleItenDiv.append('<label>' + response.response.groups[0].items[0].venue.name +
+                sampleItenDiv.append('<h4 id="sampleDaySmallHeader">Breakfast: ' + response.response.groups[0].items[0].venue.name + '</h4>');
+                sampleItenDiv.append('<label id="locationText">' + response.response.groups[0].items[0].venue.name +
                     ' is a ' + response.response.groups[0].items[0].venue.categories[0].name +
                     ' located at ' + response.response.groups[0].items[0].venue.location.formattedAddress[0] + " " +
                     response.response.groups[0].items[0].venue.location.formattedAddress[1] + " " +
@@ -310,8 +365,8 @@ $(document).ready(() => {
                 dataType: 'json',
                 success: (response) => {
                     addToSlideShow(response.response.groups[0].items[0].venue.name);
-                    sampleItenDiv.append('<h4>After breakfast, we think you will like an art activity at ' + response.response.groups[0].items[0].venue.name + '</h4>');
-                    sampleItenDiv.append('<label>' + response.response.groups[0].items[0].venue.name +
+                    sampleItenDiv.append('<h4 id="sampleDaySmallHeader">After breakfast, enjoy an art activity at ' + response.response.groups[0].items[0].venue.name + '</h4>');
+                    sampleItenDiv.append('<label id="locationText">' + response.response.groups[0].items[0].venue.name +
                         ' is a ' + response.response.groups[0].items[0].venue.categories[0].name +
                         ' located at ' + response.response.groups[0].items[0].venue.location.formattedAddress[0] + " " +
                         response.response.groups[0].items[0].venue.location.formattedAddress[1] + " " +
@@ -324,8 +379,8 @@ $(document).ready(() => {
                     dataType: 'json',
                     success: (response) => {
                         addToSlideShow(response.response.groups[0].items[0].venue.name);
-                        sampleItenDiv.append('<h4>After that, lunch at ' + response.response.groups[0].items[1].venue.name + '</h4>');
-                        sampleItenDiv.append('<label>' + response.response.groups[0].items[1].venue.name +
+                        sampleItenDiv.append('<h4 id="sampleDaySmallHeader">Lunch: ' + response.response.groups[0].items[1].venue.name + '</h4>');
+                        sampleItenDiv.append('<label id="locationText">' + response.response.groups[0].items[1].venue.name +
                             ' is a ' + response.response.groups[0].items[1].venue.categories[0].name +
                             ' located at ' + response.response.groups[0].items[1].venue.location.formattedAddress[0] + " " +
                             response.response.groups[0].items[1].venue.location.formattedAddress[1] + " " +
@@ -338,8 +393,8 @@ $(document).ready(() => {
                         dataType: 'json',
                         success: (response) => {
                             addToSlideShow(response.response.groups[0].items[0].venue.name);
-                            sampleItenDiv.append('<h4>After lunch, a very popular local site to shop at is ' + response.response.groups[0].items[1].venue.name + '</h4>');
-                            sampleItenDiv.append('<label>' + response.response.groups[0].items[1].venue.name +
+                            sampleItenDiv.append('<h4 id=sampleDaySmallHeader>After lunch, a popular local site to shop is ' + response.response.groups[0].items[1].venue.name + '</h4>');
+                            sampleItenDiv.append('<label id="locationText">' + response.response.groups[0].items[1].venue.name +
                                 ' is a ' + response.response.groups[0].items[1].venue.categories[0].name +
                                 ' located at ' + response.response.groups[0].items[1].venue.location.formattedAddress[0] + " " +
                                 response.response.groups[0].items[1].venue.location.formattedAddress[1] + " " +
@@ -352,8 +407,8 @@ $(document).ready(() => {
                             dataType: 'json',
                             success: (response) => {
                                 addToSlideShow(response.response.groups[0].items[0].venue.name);
-                                sampleItenDiv.append('<h4>Then, dinner at ' + response.response.groups[0].items[2].venue.name + '</h4>');
-                                sampleItenDiv.append('<label>' + response.response.groups[0].items[2].venue.name +
+                                sampleItenDiv.append('<h4 id="sampleDaySmallHeader">Dinner: ' + response.response.groups[0].items[2].venue.name + '</h4>');
+                                sampleItenDiv.append('<label id="locationText">' + response.response.groups[0].items[2].venue.name +
                                     ' is a ' + response.response.groups[0].items[2].venue.categories[0].name +
                                     ' located at ' + response.response.groups[0].items[2].venue.location.formattedAddress[0] + " " +
                                     response.response.groups[0].items[2].venue.location.formattedAddress[1] + " " +
@@ -366,44 +421,6 @@ $(document).ready(() => {
             });
         });
         showSlides(currentPicture);
-        if (areFlightsAvailable === "true") {
-            // add code here to append textboxes and input for first name, last name, age, and gender
-            var bookButton = $('<button class="bookButton">Book the best ticket to this destination</button>');
-
-            bookButton.click(function () {
-                var firstname = prompt("Pls enter ur first name"); // these are the textboxes
-                var lastname = prompt("pls enter ur last name");
-                var gender = prompt("whats uir gender");
-                var age = prompt("whats ur age");
-
-                $.ajax({
-                    url: rootURL + 'tickets',
-                    type: 'POST',
-                    data: {
-                        "ticket": {
-                            "first_name": firstname,
-                            "middle_name": "",
-                            "last_name": lastname,
-                            "age": age,
-                            "gender": gender,
-                            "is_purchased": false,
-                            "price_paid": "",
-                            "instance_id": "tentative",
-                            "itinerary_id": "tentative",
-                            "seat_id": "tentative",
-                            "info": '{"isTentative":"yes"}'
-                        }
-                    },
-                    xhrFields: {
-                        withCredentials: true
-                    },
-                    success: (response) =>{
-                        alert("we did it?");
-                    }
-                });
-            })
-            pageContainer.append(bookButton);
-        }
     }
 
     $('#pageContainer').on("click", ".list-entry", function () {
