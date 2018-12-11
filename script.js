@@ -255,15 +255,19 @@ $(document).ready(() => {
                 cityContainer.append("<br><textarea id=\"gender\"></textarea>");
                 cityContainer.append('<h4 id="sampleDaySmallHeader">Enter your age here </h4>');
                 cityContainer.append("<br><textarea id=\"age\"></textarea>");
+                cityContainer.append('<h4 id="sampleDaySmallHeader">Enter your email here </h4>');
+                cityContainer.append("<br><textarea id=\"email\"></textarea>");
                 var submitButton = $('<br><br><div id="submitButton"><button>Submit</button></div><br><br><br>');
                 cityContainer.append(submitButton);
                 
                 submitButton.click(function () {
                 var firstname = $.trim($("#firstName").val());
+                    console.log(firstname);
                 var lastname = $.trim($("#lastName").val());
                 var gender = $.trim($("#gender").val());
                 var age = $.trim($("#age").val());
-
+                var email = $.trim($("#email").val());
+                    
                 $.ajax({
                     url: rootURL + 'tickets',
                     type: 'POST',
@@ -286,7 +290,24 @@ $(document).ready(() => {
                         withCredentials: true
                     },
                     success: (response) =>{
-                        alert("we did it?");
+                        $.ajax({
+                            url: rootURL + 'itineraries',
+                            type: 'POST',
+                            data: {
+                                "itinerary": {
+                                    "email": email,
+                                    // put more info here if you want
+                                }
+                            },
+                            xhrFields: {
+                                withCredentials: true
+                            },
+                            success: (response) =>{
+                                var randomNumber = Math.floor(Math.random() * 1000000);
+                                cityContainer.empty();
+                                cityContainer.append('<h4 id="sampleDaySmallHeader">Your confirmation code is: ' + randomNumber + '</h4>');
+                            }
+                        });
                     }
                 });
             });
