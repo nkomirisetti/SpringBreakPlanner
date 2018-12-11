@@ -94,12 +94,12 @@ h1 {
 }
 
 #pageContainer {
-    font-family: 'Yanone Kaffeesatz', sans-serif; 
+    font-family: 'Yanone Kaffeesatz', sans-serif;
 }
 
 #cityContainer {
     position: absolute;
-    height: 470px;
+    height: -webkit-calc(100% - 200px);
     overflow-x: auto;
     overflow-y: scroll;
     width: 70%;
@@ -115,7 +115,7 @@ h1 {
 
 #cityContainer img {
     margin-top: -15px;
-    max-width: 400px; 
+    max-width: 400px;
     height: auto;
     border-radius: 8px;
 }
@@ -133,17 +133,17 @@ h1 {
 #sampleDaySmallHeader {
     font-size: 20px;
     color: #E86025;
-    margin-bottom:0px;
-    padding:0px;
+    margin-bottom: 0px;
+    padding: 0px;
 }
 
-#locationText{ 
-    font-family: Arial, Helvetica, sans-serif; 
+#locationText {
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 12px;
 }
 
-.bookButton{
-    font-family: Arial, Helvetica, sans-serif; 
+.bookButton {
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 /*Search Page Styles*/
@@ -183,7 +183,7 @@ h1 {
 }
 
 #sampleDay {
-    padding-bottom: 30px; 
+    padding-bottom: 30px;
 }
 
 /*slideshow css*/
@@ -192,7 +192,7 @@ h1 {
 }
 
 .slide {
-    width:100%;
+    width: 100%;
     max-width: 500px;
     display: none;
 }
@@ -235,16 +235,25 @@ h1 {
     -webkit-animation-name: fade;
     -webkit-animation-duration: 1.5s;
     animation-name: fade;
-    animation-duration: 1.5s;  
+    animation-duration: 1.5s;
 }
 
 @-webkit-keyframes fade {
-    from {opacity: .4} 
-    to {opacity: 1}
-  }
-  
-  @keyframes fade {
-    from {opacity: .4} 
-    to {opacity: 1}
-  }
-  
+    from {
+        opacity: .4
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+@keyframes fade {
+    from {
+        opacity: .4
+    }
+
+    to {
+        opacity: 1
+    }
+}
