@@ -451,10 +451,11 @@ $(document).ready(() => {
                                 },
                                 dataType: 'json',
                                 success: function (response) {
-                                    var newData = response[0];
-                                    newData.info = itinJson;
+                                    var newData = {"airport":response[0]};
+                                    newData.airport.info = itinJson;
+                                    
                                     console.log(newData);
-                                    $.ajax(rootURL + "airports?filter[city]=" + cityName, {
+                                    $.ajax(rootURL + "airports/" + newData.airport.id, {
                                         type: 'PUT',
                                         xhrFields: {
                                             withCredentials: true
@@ -462,7 +463,7 @@ $(document).ready(() => {
                                         dataType: 'json',
                                         data: newData,
                                         success: function (response) {
-                                                                                        
+
                                         },
                                         error: function () {
                                             alert("error");
