@@ -115,7 +115,7 @@ $(document).ready(() => {
         let pageContainer = $('#pageContainer');
         pageContainer.empty();
         pageContainer.append("<select id='search-type-selector' name='searchChoice'><option value='city'>By City</option><option value='warmer'>Warmer Than</option><option value='colder'>Colder Than</option></select>")
-        pageContainer.append("<input id='search-bar' type='text' placeholder='Search...'>");
+        pageContainer.append("<input id='search-bar' class=\"entryField\" type='text' placeholder='Search...'>");
         loadEntries();
     }
 
@@ -248,15 +248,15 @@ $(document).ready(() => {
                 var cityContainer = $('#cityContainer');
                 cityContainer.append('<br><div id=\"cityName\">' + cityName + '</div>');
                 cityContainer.append('<h4 id="sampleDaySmallHeader">Enter your first name here </h4>');
-                cityContainer.append("<br><textarea id=\"firstName\"></textarea>");
+                cityContainer.append("<br><textarea class=\"entryField\" id=\"firstName\"></textarea>");
                 cityContainer.append('<h4 id="sampleDaySmallHeader">Enter your last name here </h4>');
-                cityContainer.append("<br><textarea id=\"lastName\"></textarea>");
+                cityContainer.append("<br><textarea class=\"entryField\" id=\"lastName\" ></textarea>");
                 cityContainer.append('<h4 id="sampleDaySmallHeader">Enter your gender here </h4>');
-                cityContainer.append("<br><textarea id=\"gender\"></textarea>");
+                cityContainer.append("<br><textarea class=\"entryField\" id=\"gender\"></textarea>");
                 cityContainer.append('<h4 id="sampleDaySmallHeader">Enter your age here </h4>');
-                cityContainer.append("<br><textarea id=\"age\"></textarea>");
+                cityContainer.append("<br><textarea class=\"entryField\" id=\"age\"></textarea>");
                 cityContainer.append('<h4 id="sampleDaySmallHeader">Enter your email here </h4>');
-                cityContainer.append("<br><textarea id=\"email\"></textarea>");
+                cityContainer.append("<br><textarea class=\"entryField\" id=\"email\"></textarea>");
                 var submitButton = $('<br><br><div id="submitButton"><button>Submit</button></div><br><br><br>');
                 cityContainer.append(submitButton);
 

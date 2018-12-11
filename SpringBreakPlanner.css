@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Knewave');
 @import url('https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz');
 
+body {
+    background: url(cream_dust.png) repeat 0 0;
+}
 
 #headerNavbar {
     margin-bottom: -30px;
@@ -111,6 +114,7 @@ h1 {
     padding-left: 50px;
     background-color: #d6d6d6;
     border-radius: 8px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 #cityContainer img {
@@ -146,6 +150,10 @@ h1 {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+#entryField {
+    
+}
+
 /*Search Page Styles*/
 
 .list-entry {
@@ -154,6 +162,7 @@ h1 {
     margin-bottom: 10px;
     border-radius: 5px;
     display: flex;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .list-entry:hover {
