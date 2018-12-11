@@ -173,7 +173,7 @@ $(document).ready(() => {
             success: function (response) {
                 let raleighFlights = response;
                 let flightCount = 0;
-                for (let i = 0; i < raleighFlights.length; i++) {
+                for (let i = 0; i < 10; i++) {
                     if (raleighFlights[i].arrival_id == entry.attr("id"))
                         flightCount++;
 
