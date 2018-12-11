@@ -129,7 +129,7 @@ $(document).ready(() => {
             success: function (response) {
                 console.log(response);
                 let airportArray = response;
-                for (let i = 0; i < 10; i++) {
+                for (let i = 0; i < 30; i++) {
                     let city = airportArray[i].city;
                     let idNum = airportArray[i].id;
                     let newEntry = buildEntry(city, idNum);
