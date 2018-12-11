@@ -217,7 +217,7 @@ $(document).ready(() => {
         pageContainer.empty();
         pageContainer.append("<div id=\"cityContainer\"></div>");
         var cityContainer = $('#cityContainer');
-
+        var itinJson = {};
         var showSlides = function (n) {
             var i;
             var slides = document.getElementsByClassName("slide");
@@ -237,7 +237,7 @@ $(document).ready(() => {
         }
         var cityName = city;
         cityContainer.append('<br><div id=\"cityName\">' + cityName + '</div>');
-        
+
         if (areFlightsAvailable === "true") {
             // add code here to append textboxes and input for first name, last name, age, and gender
             var bookButton = $('<br><div class="bookButton"><button>Book ticket</button></div><br><br>');
@@ -259,64 +259,64 @@ $(document).ready(() => {
                 cityContainer.append("<br><textarea id=\"email\"></textarea>");
                 var submitButton = $('<br><br><div id="submitButton"><button>Submit</button></div><br><br><br>');
                 cityContainer.append(submitButton);
-                
+
                 submitButton.click(function () {
-                var firstname = $.trim($("#firstName").val());
+                    var firstname = $.trim($("#firstName").val());
                     console.log(firstname);
-                var lastname = $.trim($("#lastName").val());
-                var gender = $.trim($("#gender").val());
-                var age = $.trim($("#age").val());
-                var email = $.trim($("#email").val());
-                    
-                $.ajax({
-                    url: rootURL + 'tickets',
-                    type: 'POST',
-                    data: {
-                        "ticket": {
-                            "first_name": firstname,
-                            "middle_name": "",
-                            "last_name": lastname,
-                            "age": age,
-                            "gender": gender,
-                            "is_purchased": false,
-                            "price_paid": "",
-                            "instance_id": "tentative",
-                            "itinerary_id": "tentative",
-                            "seat_id": "tentative",
-                            "info": '{"isTentative":"yes"}'
-                        }
-                    },
-                    xhrFields: {
-                        withCredentials: true
-                    },
-                    success: (response) =>{
-                        $.ajax({
-                            url: rootURL + 'itineraries',
-                            type: 'POST',
-                            data: {
-                                "itinerary": {
-                                    "email": email,
-                                    // put more info here if you want
-                                }
-                            },
-                            xhrFields: {
-                                withCredentials: true
-                            },
-                            success: (response) =>{
-                                var randomNumber = Math.floor(Math.random() * 1000000);
-                                cityContainer.empty();
-                                cityContainer.append('<h4 id="sampleDaySmallHeader">Your confirmation code is: ' + randomNumber + '</h4>');
+                    var lastname = $.trim($("#lastName").val());
+                    var gender = $.trim($("#gender").val());
+                    var age = $.trim($("#age").val());
+                    var email = $.trim($("#email").val());
+
+                    $.ajax({
+                        url: rootURL + 'tickets',
+                        type: 'POST',
+                        data: {
+                            "ticket": {
+                                "first_name": firstname,
+                                "middle_name": "",
+                                "last_name": lastname,
+                                "age": age,
+                                "gender": gender,
+                                "is_purchased": false,
+                                "price_paid": "",
+                                "instance_id": "tentative",
+                                "itinerary_id": "tentative",
+                                "seat_id": "tentative",
+                                "info": '{"isTentative":"yes"}'
                             }
-                        });
-                    }
+                        },
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        success: (response) => {
+                            $.ajax({
+                                url: rootURL + 'itineraries',
+                                type: 'POST',
+                                data: {
+                                    "itinerary": {
+                                        "email": email,
+                                        // put more info here if you want
+                                    }
+                                },
+                                xhrFields: {
+                                    withCredentials: true
+                                },
+                                success: (response) => {
+                                    var randomNumber = Math.floor(Math.random() * 1000000);
+                                    cityContainer.empty();
+                                    cityContainer.append('<h4 id="sampleDaySmallHeader">Your confirmation code is: ' + randomNumber + '</h4>');
+                                }
+                            });
+                        }
+                    });
                 });
-            });
             });
             $("#cityContainer").append(bookButton);
         }
-        
-        if (areFlightsAvailable === "false" || cityName === "Raleigh-durham" || cityName === "Asheville" || cityName === "Charleston"){
-             $("#cityContainer").append("<br><br>");
+
+        if (areFlightsAvailable === "false" || cityName === "Raleigh-durham" || cityName === "Asheville" || cityName === "Charleston") {
+            $("#cityContainer").append("<br><br>");
         }
 
         // slideShowCode
@@ -379,6 +379,7 @@ $(document).ready(() => {
                     response.response.groups[0].items[0].venue.location.formattedAddress[1] + " " +
                     response.response.groups[0].items[0].venue.location.formattedAddress[2] + '</label>');
                 cityContainer.append(sampleItenDiv);
+                itinJson.breakfast = response.response.groups[0].items[0].venue.name;
             }
         }).done(function () {
             $.ajax(venues_url + city + "&section=arts&v=20181202&limit=1&radius=30000", {
@@ -393,6 +394,8 @@ $(document).ready(() => {
                         response.response.groups[0].items[0].venue.location.formattedAddress[1] + " " +
                         response.response.groups[0].items[0].venue.location.formattedAddress[2] + '</label>');
                     cityContainer.append(sampleItenDiv);
+                    itinJson.art = response.response.groups[0].items[0].venue.name;
+
                 }
             }).done(function () {
                 $.ajax(venues_url + city + "&query=lunch&v=20181202&limit=3&radius=30000", {
@@ -407,6 +410,8 @@ $(document).ready(() => {
                             response.response.groups[0].items[1].venue.location.formattedAddress[1] + " " +
                             response.response.groups[0].items[1].venue.location.formattedAddress[2] + '</label>');
                         cityContainer.append(sampleItenDiv);
+                        itinJson.lunch = response.response.groups[0].items[1].venue.name;
+
                     }
                 }).done(function () {
                     $.ajax(venues_url + city + "&section=shops&v=20181202&limit=2&radius=3000", {
@@ -421,6 +426,7 @@ $(document).ready(() => {
                                 response.response.groups[0].items[1].venue.location.formattedAddress[1] + " " +
                                 response.response.groups[0].items[1].venue.location.formattedAddress[2] + '</label>');
                             cityContainer.append(sampleItenDiv);
+                            itinJson.shop = response.response.groups[0].items[1].venue.name;
                         }
                     }).done(function () {
                         $.ajax(venues_url + city + "&query=dinner&v=20181202&limit=3&radius=3000", {
@@ -435,7 +441,40 @@ $(document).ready(() => {
                                     response.response.groups[0].items[2].venue.location.formattedAddress[1] + " " +
                                     response.response.groups[0].items[2].venue.location.formattedAddress[2] + '</label>');
                                 cityContainer.append(sampleItenDiv);
+                                itinJson.dinner = response.response.groups[0].items[2].venue.name;
                             }
+                        }).done(function () {
+                            $.ajax(rootURL + "airports?filter[city]=" + cityName, {
+                                type: 'GET',
+                                xhrFields: {
+                                    withCredentials: true
+                                },
+                                dataType: 'json',
+                                success: function (response) {
+                                    var newData = response[0];
+                                    newData.info = itinJson;
+                                    console.log(newData);
+                                    $.ajax(rootURL + "airports?filter[city]=" + cityName, {
+                                        type: 'PUT',
+                                        xhrFields: {
+                                            withCredentials: true
+                                        },
+                                        dataType: 'json',
+                                        data: newData,
+                                        success: function (response) {
+                                                                                        
+                                        },
+                                        error: function () {
+                                            alert("error");
+                                        }
+                                    });
+        
+                                },
+                                error: function () {
+                                    alert("error");
+                                }
+                            });
+
                         });
                     });
                 });
